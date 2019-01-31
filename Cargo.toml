@@ -1,0 +1,8 @@
+[package]
+name = "tsuki"
+version = "0.1.0"
+authors = ["Sverre Johann Bjørke <sverrejb@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+rocket = "0.4.0"
