@@ -1,2 +1,2 @@
 # Tsuki 🌔
-A small project using rocket and various techniques for minimizing binary size.
+A small experiment using rocket and various techniques for minimizing binary size.
