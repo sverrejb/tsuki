@@ -3,3 +3,4 @@ target
 .gitignore
 .dockerignore
 .DS_Store
+Dockerfile

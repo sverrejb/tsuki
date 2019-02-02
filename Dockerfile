@@ -1,16 +1,17 @@
-FROM rustlang/rust:nightly
+FROM rustlang/rust:nightly as builder
 
 RUN apt-get update
-RUN apt-get -y install upx
+RUN apt-get -y install upx musl-tools
+RUN rustup target add x86_64-unknown-linux-musl
 WORKDIR /tsuki
-#COPY Cargo.toml .
-#RUN mkdir src \
-#    && echo "// dummy file" > src/lib.rs \
-#    && cargo build
 COPY . .
-RUN cargo build --release
-#RUN ls -lah target/debug/
-#RUN upx --ultra-brute target/*/tsuki
-RUN ls -lah target/release/tsuki
-RUN rustc --version
-CMD ["./target/release/tsuki"]
+RUN cargo build --release --target x86_64-unknown-linux-musl
+
+RUN ls -lah target/x86_64-unknown-linux-musl/release/tsuki
+RUN upx --ultra-brute target/x86_64-unknown-linux-musl/release/tsuki
+RUN ls -lah target/x86_64-unknown-linux-musl/release/tsuki
+
+FROM busybox:musl
+
+COPY --from=builder /tsuki/target/x86_64-unknown-linux-musl/release/tsuki /bin/tsuki  
+CMD ["tsuki"]
