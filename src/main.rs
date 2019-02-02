@@ -1,12 +1,23 @@
-#![feature(proc_macro_hygiene, decl_macro)]
+extern crate hyper;
 
-#[macro_use] extern crate rocket;
+use hyper::{Body, Response, Server};
+use hyper::rt::Future;
+use hyper::service::service_fn_ok;
 
-#[get("/")]
-fn index() -> &'static str {
-    "Hello, world!"
-}
+static TEXT: &str = "Hello, World!";
 
 fn main() {
-    rocket::ignite().mount("/", routes![index]).launch();
+    let addr = ([0, 0, 0, 0], 3000).into();
+
+    let new_svc = || {
+        service_fn_ok(|_req|{
+            Response::new(Body::from(TEXT))
+        })
+    };
+
+    let server = Server::bind(&addr)
+        .serve(new_svc)
+        .map_err(|e| eprintln!("server error: {}", e));
+
+    hyper::rt::run(server);
 }
