@@ -8,6 +8,7 @@ COPY . .
 RUN cargo build --release --target x86_64-unknown-linux-musl
 
 RUN ls -lah target/x86_64-unknown-linux-musl/release/tsuki
+RUN strip target/x86_64-unknown-linux-musl/release/tsuki
 RUN upx --ultra-brute target/x86_64-unknown-linux-musl/release/tsuki
 RUN ls -lah target/x86_64-unknown-linux-musl/release/tsuki
 
